@@ -3,10 +3,10 @@ import { Fragment } from 'react';
 import Reviews from './reviews/reviews';
 import reviews from '../../mocks/reviews';
 
-import {OfferServer} from '../../types/offer';
+import {SelectedOffer} from '../../types/offer';
 
 type OfferDetailsProps = {
-  selectedOffer: OfferServer;
+  selectedOffer: SelectedOffer;
 }
 
 function OfferDetails({ selectedOffer }: OfferDetailsProps): JSX.Element {
@@ -15,7 +15,7 @@ function OfferDetails({ selectedOffer }: OfferDetailsProps): JSX.Element {
       <div className="offer__gallery-container container">
         <div className="offer__gallery">
           {
-            selectedOffer.images.slice(0, 6).map((img) => (
+            selectedOffer.images?.slice(0, 6).map((img) => (
               <Fragment key={img}>
                 <div className="offer__image-wrapper">
                   <img className="offer__image" src={img} alt="Photo studio" />

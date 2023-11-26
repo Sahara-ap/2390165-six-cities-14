@@ -5,7 +5,6 @@ import Filter from '../../components/filter/filter';
 
 import { useAppSelector, useAppDispatch } from '../../hooks';
 import { PlaceHolder } from '../../components/placeholder/placeholder';
-import { setOffers, isLoaded as isReady } from '../../store/actions';
 import { useGetOffers } from '../../services/apiService/api';
 
 function MainPage(): JSX.Element {
@@ -13,7 +12,7 @@ function MainPage(): JSX.Element {
   const isLoaded = useAppSelector((state) => state.isLoaded);
   const dispatch = useAppDispatch();
 
-  useGetOffers(dispatch);
+  useGetOffers(dispatch, 'offers');
   // useEffect(() => {
 
   //   fetch('https://14.design.pages.academy/six-cities/offers')
@@ -29,7 +28,7 @@ function MainPage(): JSX.Element {
 
   return (
     <>
-      <PlaceHolder />
+      {!isLoaded && <PlaceHolder />}
 
       {isLoaded &&
         <div className="page page--gray page--main">

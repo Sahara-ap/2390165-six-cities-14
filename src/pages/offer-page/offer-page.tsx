@@ -1,66 +1,75 @@
 import { Helmet } from 'react-helmet-async';
 import { Navigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
-import { AppRoute, CITIES_LOCATION } from '../../const';
+import { AppRoute } from '../../const';
 import Map from '../../components/map/map';
 import OfferDetails from '../../components/offer-details/offer-details';
 import NearPlaces from '../../components/near-places/near-places';
+import { fetchNearPlaces, fetchSelectedOffer, isSelectedOfferLoaded } from '../../store/actions';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
 
-import { Offer, OfferServer } from '../../types/offer';
-import { useEffect, useState } from 'react';
-import { offerServer } from '../../mocks/offer';
-import { useAppSelector } from '../../hooks';
+import { FullOffer, NearOffer, SelectedOffer } from '../../types/offer';
+import { PlaceHolder } from '../../components/placeholder/placeholder';
+
 
 function OfferPage(): JSX.Element {
+  const dispatch = useAppDispatch();
   const { offerId } = useParams();
-  const selectedCityName = useAppSelector((state) => state.activeCity);
-  const [selectedOffer, setSelectedOffer] = useState<OfferServer>(offerServer);
-  // const [offersServer, setOffersServer] = useState(offers);
-  const offersServer = useAppSelector((state) => state.offers);
+  const nearOffers: NearOffer[] = useAppSelector((state) => state.nearPlaces);
+  const selectedOffer = useAppSelector((state) => state.selectedOffer);
+  const isReady = useAppSelector((state) => state.isSelectedOfferLoaded);
 
   useEffect(() => {
-    fetch(`https://14.design.pages.academy/six-cities/offers/${offerId}`)
+    if (offerId) {
+      fetch(`https://14.design.pages.academy/six-cities/offers/${offerId}`)
+        .then((response) => response.json())
+        .then((data: SelectedOffer) => dispatch(fetchSelectedOffer(data)))
+        .then(() => setTimeout(() => {
+          dispatch(isSelectedOfferLoaded());
+        }, 500));
+    }
+  }, []);
+
+
+  useEffect(() => {
+    fetch(`https://14.design.pages.academy/six-cities/offers/${offerId}/nearby`)
       .then((response) => response.json())
-      .then((data: OfferServer) => setSelectedOffer(data));
+      .then((data: NearOffer[]) => dispatch(fetchNearPlaces(data)));
   }, [offerId]);
 
-  if (!selectedOffer) {
+  if (!selectedOffer && !offerId) {
     return <Navigate to={AppRoute.NotFound} />;
   }
 
-  const offersByCity: Offer[] | OfferServer[] = offersServer.filter((offer) =>
-    (offer.city.name === selectedCityName));
+  const nearOffersCut = nearOffers.slice(0, 3);
+  const onMapOffers: FullOffer[] | null = [...nearOffersCut, selectedOffer];
 
-  const nearOffers: Offer[] | Array<OfferServer> = offersByCity
-    .filter((offer) => offer.id !== offerId)
-    .slice(0, 3);
-
-  const onMapOffers: OfferServer[] | Offer[] = [...nearOffers];
-  onMapOffers.push(selectedOffer);
 
   return (
+    <>
+      {!isReady && <PlaceHolder />}
 
-    <div className="page">
-      <Helmet>
-        <title>{'6 cities - offer'}</title>
-      </Helmet>
-      <main className="page__main page__main--offer">
-        <section className="offer">
-          <OfferDetails selectedOffer={selectedOffer} />
-          <Map
-            mapType={'offer'}
-            cityLocations={CITIES_LOCATION}
-            offers={onMapOffers}
-            selectedOffer={selectedOffer}
-          />
-        </section>
-        <div className="container">
-          <NearPlaces upcomingOffers={nearOffers} />
-        </div>
-      </main>
-    </div>
-
+      {isReady && selectedOffer && onMapOffers &&
+        <div className="page">
+          <Helmet>
+            <title>{'6 cities - offer'}</title>
+          </Helmet>
+          <main className="page__main page__main--offer">
+            <section className="offer">
+              <OfferDetails selectedOffer={selectedOffer} />
+              <Map
+                mapType={'offer'}
+                offers={onMapOffers}
+              />
+            </section>
+            <div className="container">
+              <NearPlaces upcomingOffers={nearOffersCut} />
+            </div>
+          </main>
+        </div>};
+    </>
   );
 }
 

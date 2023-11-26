@@ -3,23 +3,21 @@ import { useState, useRef, useEffect } from 'react';
 import { Map } from 'leaflet';
 import L from 'leaflet';
 
-import { ActiveCity, CityLocationType } from '../types/city';
+import Loc from '../types/loc';
 
 function useMap(
   mapRef: React.MutableRefObject<HTMLElement | null>,
-  cityLocations: Array<CityLocationType>,
-  activeCity: ActiveCity
+  cityLocation: Loc | object,
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
-  const cityLocation = cityLocations.find((it) => it?.title === activeCity);
 
   useEffect(() => {
-    if (!isRenderedRef.current && mapRef.current !== null && cityLocation) {
+    if (!isRenderedRef.current && mapRef.current !== null && 'latitude' in cityLocation) {
       const instance = L.map(mapRef.current, {
         center: {
-          lat: cityLocation.lat,
-          lng: cityLocation.lng,
+          lat: cityLocation.latitude,
+          lng: cityLocation.longitude,
         },
         zoom: cityLocation.zoom
       });
@@ -37,7 +35,7 @@ function useMap(
       setMap(instance);
       isRenderedRef.current = true;
     }
-  }, [mapRef, cityLocation, activeCity]);
+  }, [mapRef, cityLocation]);
   return map;
 }
 

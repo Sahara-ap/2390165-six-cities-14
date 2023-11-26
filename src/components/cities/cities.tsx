@@ -3,13 +3,12 @@ import { useState } from 'react';
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
 
-import { CITIES_LOCATION } from '../../const';
-
 import Sort from '../sort/sort';
 
 import { ActiveCity } from '../../types/city';
 import { Offer } from '../../types/offer';
 import { SortType } from '../../types/sort';
+import { useParams } from 'react-router-dom';
 
 type CitiesProps = {
   offersByCity: Array<Offer>;
@@ -33,8 +32,13 @@ function Cities({ offersByCity, selectedCity }: CitiesProps): JSX.Element {
   function handleCardHover(offerId: Offer['id'] | null) {
     setHoveredOfferId(offerId);
   }
+  const flag = true
 
   return (
+    {
+      flag &&
+
+
     <div className="cities">
       <div className="cities__places-container container">
         <section className="cities__places places">
@@ -52,14 +56,14 @@ function Cities({ offersByCity, selectedCity }: CitiesProps): JSX.Element {
         <div className="cities__right-section">
           <Map
             mapType={'cities'}
-            cityLocations={CITIES_LOCATION}
             offers={offersByCity}
             hoveredOfferId={hoveredOfferId}
           />
         </div>
       </div>
     </div>
-  );
-}
+      }
+    );
+  }
 
 export default Cities;

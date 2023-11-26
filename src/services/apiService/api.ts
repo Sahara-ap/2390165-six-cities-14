@@ -6,7 +6,7 @@ import store from '../../store';
 import { getToken } from './token';
 
 
-const BASE_URL = 'https://14.design.pages.academy/six-cities';
+const BASE_URL = 'https://14.design.pages.academy/six-cities/';
 const REQUEST_TIMEOUT = 5000;
 
 export function createAPI(): AxiosInstance {
@@ -29,6 +29,8 @@ export function createAPI(): AxiosInstance {
   return api;
 }
 
+
+
 const Options = {
   BASE_URL: 'https://14.design.pages.academy/six-cities/'
 };
@@ -44,11 +46,11 @@ async function request(path: string, options = {}) {
 
 }
 
-function useGetOffers(dispatch: typeof store.dispatch) {
+function useGetOffers(dispatch: typeof store.dispatch, path:string) {
   useEffect(() => {
     let isNeedUpdate = true;
     async function startFetching() {
-      const data = await request('offers');
+      const data = await request(path);
       if (isNeedUpdate) {
         dispatch(setOffers(data));
         setTimeout(() => dispatch(isLoaded()), 500);
@@ -62,6 +64,7 @@ function useGetOffers(dispatch: typeof store.dispatch) {
     });
   }, []);
 }
+
 
 
 // function useGetOffers(dispatch: typeof store.dispatch) {

@@ -1,11 +1,11 @@
 import Card from '../card/card';
 
-import {Offer} from '../../types/offer';
+import {NearOffer, Offer} from '../../types/offer';
 
 
 type OfferListProps = {
   elementType: 'cities' | 'favorite' | 'offers';
-  offers: Array<Offer>;
+  offers: Offer[] | NearOffer[];
   onCardHover?: (offerId: Offer['id'] | null) => void;
 }
 
