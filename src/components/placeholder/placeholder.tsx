@@ -1,9 +1,9 @@
 import styles from './placeholder.module.css';
+import preloader from '../../../public/img/preloader.svg';
 
 import { useEffect } from 'react';
 
 function PlaceHolder(): JSX.Element | null {
-  const message = 'Loading...';
 
   function handleDocumentClick(event: MouseEvent) {
     event.preventDefault();
@@ -11,11 +11,16 @@ function PlaceHolder(): JSX.Element | null {
 
   useEffect(() => {
     document.addEventListener('click', handleDocumentClick);
-    return(() => document.removeEventListener('click', handleDocumentClick));
+    return (() => document.removeEventListener('click', handleDocumentClick));
   }, []);
 
+
   return (
-    <p className={`${styles.message}`}>{message}</p>
+
+    <div className={styles.preloader}>
+      <img src={preloader} alt="Preloader" />
+    </div>
+
   );
 }
 
