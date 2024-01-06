@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { postFavStatusAction } from '../../store/api-actions';
 import { getAuthStatus } from '../../store/users-process/user-process-selectors';
 import { getRatingValue } from '../../utilities';
+import { memo } from 'react';
 
 type CardProps = {
   elementType: 'cities' | 'favorite' | 'offers';
@@ -30,7 +31,9 @@ const options = {
   },
 };
 
-function Card({ elementType, offer, onCardHover }: CardProps): JSX.Element {
+function CardComponent({ elementType, offer, onCardHover }: CardProps): JSX.Element {
+  console.log('отрисована карточка');
+
 
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(getAuthStatus);
@@ -110,5 +113,7 @@ function Card({ elementType, offer, onCardHover }: CardProps): JSX.Element {
 
   );
 }
+
+const Card = memo(CardComponent);
 
 export default Card;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
@@ -29,9 +29,13 @@ function Cities({ offersByCity, selectedCity }: CitiesProps): JSX.Element {
   const sort = sortCallbacks[sortItem] ?? defaultSort;
   const sortedOffers = offersByCity.slice().sort(sort);
 
-  function handleCardHover(offerId: Offer['id'] | null) {
-    setHoveredOfferId(offerId);
-  }
+  // function handleCardHover(offerId: Offer['id'] | null) {
+  //   setHoveredOfferId(offerId);
+  // }
+
+  const handleCardHover = useCallback(
+    (offerId: Offer['id'] | null) => setHoveredOfferId(offerId)
+    , []);
 
   return (
     <div className="cities">

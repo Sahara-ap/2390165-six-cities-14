@@ -1,6 +1,7 @@
 import Card from '../card/card';
 
 import { Offer } from '../../types/offer';
+import { memo } from 'react';
 
 
 type OfferListProps = {
@@ -9,7 +10,8 @@ type OfferListProps = {
   onCardHover?: (offerId: Offer['id'] | null) => void;
 }
 
-function CardList({ elementType, offers, onCardHover }: OfferListProps) {
+function CardListComponent({ elementType, offers, onCardHover }: OfferListProps) {
+  console.log('отрисован БЛОК');
   return (
     <>
       {
@@ -25,5 +27,6 @@ function CardList({ elementType, offers, onCardHover }: OfferListProps) {
     </>
   );
 }
+const CardList = memo(CardListComponent, (prevProps, nextProps) => prevProps.onCardHover === nextProps.onCardHover);
 
 export default CardList;
