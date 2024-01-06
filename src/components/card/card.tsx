@@ -32,8 +32,6 @@ const options = {
 };
 
 function CardComponent({ elementType, offer, onCardHover }: CardProps): JSX.Element {
-  console.log('отрисована карточка');
-
 
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(getAuthStatus);

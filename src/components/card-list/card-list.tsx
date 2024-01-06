@@ -11,7 +11,6 @@ type OfferListProps = {
 }
 
 function CardListComponent({ elementType, offers, onCardHover }: OfferListProps) {
-  console.log('отрисован БЛОК');
   return (
     <>
       {
