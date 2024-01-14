@@ -1,6 +1,6 @@
 import { describe } from 'vitest';
 import { getOffers } from './offer-data-selectors';
-import { NameSpace } from '../../const';
+import { LoadingDataStatus, NameSpace } from '../../const';
 
 describe('OfferData selectors', () => {
   const state = {
@@ -20,6 +20,12 @@ describe('OfferData selectors', () => {
       favs: [],
       favsLoadingStatus: LoadingDataStatus.Unsent
     }
-  }
-  const result = getOffers();
+  };
+
+  it('should return offers from state', () => {
+    const result = getOffers(state);
+    expect(result).toEqual([]);
+  });
+
+
 });
