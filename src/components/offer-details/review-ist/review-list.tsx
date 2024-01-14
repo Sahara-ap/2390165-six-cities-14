@@ -1,8 +1,8 @@
 import Review from '../review/review';
 
 import { useAppSelector } from '../../../hooks';
-import { convertDateInMs } from '../../../utilities';
 import { getReviews } from '../../../store/offer-data/offer-data-selectors';
+import { convertDateInMs } from '../../../utilities/utilities';
 
 const MAX_COMMENT_LENGTH = 10;
 

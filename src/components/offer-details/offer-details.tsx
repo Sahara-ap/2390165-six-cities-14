@@ -9,7 +9,7 @@ import { AppRoute, AuthStatus } from '../../const';
 
 import { SelectedOffer } from '../../types/offer';
 import { getAuthStatus } from '../../store/users-process/user-process-selectors';
-import { getRatingValue } from '../../utilities';
+import { getRatingValue } from '../../utilities/utilities';
 
 type OfferDetailsProps = {
   selectedOffer: SelectedOffer;

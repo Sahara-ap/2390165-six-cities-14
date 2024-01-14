@@ -4,8 +4,9 @@ import { AppRoute, AuthStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { postFavStatusAction } from '../../store/api-actions';
 import { getAuthStatus } from '../../store/users-process/user-process-selectors';
-import { getRatingValue } from '../../utilities';
 import { memo } from 'react';
+import { getRatingValue } from '../../utilities/utilities';
+
 
 type CardProps = {
   elementType: 'cities' | 'favorite' | 'offers';

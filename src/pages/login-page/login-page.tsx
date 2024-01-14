@@ -8,7 +8,7 @@ import { getAuthStatus } from '../../store/users-process/user-process-selectors'
 import { setCity } from '../../store/app-process/app-process-slice';
 
 import { AppRoute, AuthStatus, CITY_NAMES } from '../../const';
-import { pickRandomElement } from '../../utilities';
+import { pickRandomElement } from '../../utilities/utilities';
 import Header from '../../components/header/header';
 
 

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import store from './store';
-import { clearErrorAction } from './store/api-actions';
-import { setError } from './store/app-process/app-process-slice';
+import store from '../store';
+import { clearErrorAction } from '../store/api-actions';
+import { setError } from '../store/app-process/app-process-slice';
 
 function convertDateInMs(value: string) {
   return Date.parse(value);
