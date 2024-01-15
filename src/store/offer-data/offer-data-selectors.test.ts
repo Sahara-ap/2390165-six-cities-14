@@ -1,15 +1,18 @@
 import { describe } from 'vitest';
-import { getOffers } from './offer-data-selectors';
+import { getErrorStatus, getIsOffersLoading, getOffers, getSelectedOffer } from './offer-data-selectors';
 import { LoadingDataStatus, NameSpace } from '../../const';
+import { makeFakeOffers, makeFakeSelectedOffer } from '../../utilities/mocks';
 
 describe('OfferData selectors', () => {
+  const mockOffers = makeFakeOffers();
+  const mockSelectedOffer = makeFakeSelectedOffer();
   const state = {
     [NameSpace.Data]: {
-      offers: [],
+      offers: mockOffers,
       hasError: false,
       isOffersLoading: false,
 
-      selectedOffer: null,
+      selectedOffer: mockSelectedOffer,
       nearPlaces: [],
       reviews: [],
       offerDataStatusSending: LoadingDataStatus.Unsent,
@@ -22,9 +25,28 @@ describe('OfferData selectors', () => {
     }
   };
 
-  it('should return offers from state', () => {
+  it('should return "offers" from state', () => {
+    const {offers} = state[NameSpace.Data];
     const result = getOffers(state);
-    expect(result).toEqual([]);
+    expect(result).toEqual(offers);
+  });
+
+  it('should return hasError from state', () => {
+    const {hasError} = state[NameSpace.Data];
+    const result = getErrorStatus(state);
+    expect(result).toBe(hasError);
+  });
+
+  it('should return isOffersLoading from state', () => {
+    const {isOffersLoading} = state[NameSpace.Data];
+    const result = getIsOffersLoading(state);
+    expect(result).toBe(isOffersLoading);
+  });
+
+  it('should return "selectedOffer" from state', () => {
+    const {selectedOffer} = state[NameSpace.Data];
+    const result = getSelectedOffer(state);
+    expect(result).toEqual(selectedOffer);
   });
 
 
