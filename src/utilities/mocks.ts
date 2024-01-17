@@ -5,6 +5,7 @@ import { pickRandomElement } from './utilities';
 
 import { Offer, SelectedOffer } from '../types/offer';
 import Host from '../types/host';
+import ReviewType from '../types/review';
 
 
 const makeFakeLocation = () => ({
@@ -48,7 +49,7 @@ const makeFakeSelectedOffer = (): SelectedOffer => ({
   location: makeFakeLocation(),
   isFavorite: true,
   isPremium: true,
-  rating: faker.number.float({min: 0, max: 5, precision: 0.1}),
+  rating: faker.number.float({ min: 0, max: 5, precision: 0.1 }),
   description: faker.lorem.lines(1),
   bedrooms: faker.number.int(),
   goods: [faker.lorem.lines(1)],
@@ -57,10 +58,21 @@ const makeFakeSelectedOffer = (): SelectedOffer => ({
   maxAdults: faker.number.int(),
 });
 
+const makeFakeReviews = (): ReviewType[] => {
+  const result = new Array(3).fill(null).map(() => ({
+    id: faker.string.uuid(),
+    date: faker.string.numeric(),
+    user: makeFakeHost(),
+    comment: faker.lorem.lines(1),
+    rating: faker.number.float({ min: 0, max: 5, precision: 0.1 }),
+  }));
+  return result;
+};
 
 export {
   makeFakeLocation,
   makeFakeHost,
   makeFakeOffers,
   makeFakeSelectedOffer,
+  makeFakeReviews,
 };

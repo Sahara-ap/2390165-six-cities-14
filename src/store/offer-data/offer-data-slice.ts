@@ -83,6 +83,7 @@ const offersData = createSlice({
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
         state.offers = action.payload;
         state.isOffersLoading = false;
+        state.hasError = false;
       })
       .addCase(fetchOffersAction.rejected, (state) => {
         state.isOffersLoading = false;
