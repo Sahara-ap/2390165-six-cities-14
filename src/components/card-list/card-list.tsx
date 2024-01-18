@@ -3,7 +3,6 @@ import Card from '../card/card';
 import { Offer } from '../../types/offer';
 import { memo } from 'react';
 
-
 type OfferListProps = {
   elementType: 'cities' | 'favorite' | 'offers';
   offers: Offer[];
@@ -11,6 +10,7 @@ type OfferListProps = {
 }
 
 function CardListComponent({ elementType, offers, onCardHover }: OfferListProps) {
+
   return (
     <>
       {
@@ -26,6 +26,7 @@ function CardListComponent({ elementType, offers, onCardHover }: OfferListProps)
     </>
   );
 }
-const CardList = memo(CardListComponent, (prevProps, nextProps) => prevProps.onCardHover === nextProps.onCardHover);
+
+const CardList = memo(CardListComponent);
 
 export default CardList;

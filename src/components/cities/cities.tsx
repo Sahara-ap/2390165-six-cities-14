@@ -27,11 +27,21 @@ function Cities({ offersByCity, selectedCity }: CitiesProps): JSX.Element {
   };
   const defaultSort = sortCallbacks['Popular'];
   const sort = sortCallbacks[sortItem] ?? defaultSort;
+  // перед сортировкой копирую массив. В данном конкретном случае это нужно для отмены мемоизации при выборе сортировки
   const sortedOffers = offersByCity.slice().sort(sort);
+  // const sortedOffers = offersByCity.sort(sort);
 
   // function handleCardHover(offerId: Offer['id'] | null) {
   //   setHoveredOfferId(offerId);
   // }
+
+
+  //--> мемоизирую коллбэк. В зависимостях указываются переменные, изменение которых, отменит мемоизацию, т.е. создаст новый коллбек при перерисовке Cities
+  //--> CardList все-равно перерисовывается при наведении на карточку по одной причине:
+  //     1)offerId живет в state компонента, который перерисовывается и создает по новой все переменные внутри своего тела
+  //        sortedOffers при создании использует копию пропса (slice().sort(), следовательно при перерисовке это будет новый массив
+  //        Новый массив передается пропсом offers={sortedOffers} в CardList --> перерисовка
+  //         Убрать slice() мы не можем, иначе при смене значения сортировки нам нужна перерисовка CardList, но мемоизированный CardList не даст нам ее
 
   const handleCardHover = useCallback(
     (offerId: Offer['id'] | null) => setHoveredOfferId(offerId)
