@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
-import { APIRoute, TIMEOUT_SHOW_ERROR } from '../const';
+import { APIRoute, AppRoute, TIMEOUT_SHOW_ERROR } from '../const';
 import { dropToken, saveToken } from '../services/apiService/token';
 
 import { AppDispatch, ThunkAPI } from '../types/state';
@@ -11,6 +11,7 @@ import { Favorite, Offer, SelectedOffer } from '../types/offer';
 import ReviewType, { CommentSend } from '../types/review';
 import { setError } from './app-process/app-process-slice';
 import { addFavOffer, dropAllFavorites, dropFavOffer, updateNearPlaces, updateOffers } from './offer-data/offer-data-slice';
+import { redirectToRoute } from './actions/actions';
 
 
 const fetchOffersAction = createAsyncThunk<Offer[], undefined, {
@@ -124,6 +125,12 @@ const loginAction = createAsyncThunk<UserData, AuthData, {
 
       dispatch(fetchOffersAction());
       dispatch(fetchFavoritesAction());
+
+      // редирект через action и собственный middlware в случае успешной авторизации
+      //  на LoginPage есть строка №36 где используется навигация в случае если user авторизован и данный диспатч дублирует логику
+      //  но важно понять логику редиректа.
+      //  Если на LoginPage отключить навигацию, эта строчка сработает!
+      dispatch(redirectToRoute(AppRoute.Main));
     }
     return data;
   });
