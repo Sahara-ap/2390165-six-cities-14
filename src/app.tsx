@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import MainPage from './pages/main-page/main-page';
 import LoginPage from './pages/login-page/login-page';
@@ -16,6 +16,8 @@ import { getErrorStatus } from './store/offer-data/offer-data-selectors';
 import Error from './pages/error/error';
 import { useEffect } from 'react';
 import { checkAuthAction } from './store/api-actions';
+import HistoryRouter from './components/history-route/history-route';
+import browserHistory from './browser-history';
 
 
 function App(): JSX.Element {
@@ -32,7 +34,7 @@ function App(): JSX.Element {
   }
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <HistoryRouter history={browserHistory} >
         <ScrollToTop />
         <Routes>
           <Route path={'/'} element={<Layout />} >
@@ -52,7 +54,7 @@ function App(): JSX.Element {
           </Route>
           <Route path={AppRoute.Login} element={<LoginPage />} />
         </Routes>
-      </BrowserRouter >
+      </HistoryRouter>
     </HelmetProvider >
 
   );
