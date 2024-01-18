@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import CardList from '../card-list/card-list';
 import Map from '../map/map';
@@ -29,7 +29,10 @@ function Cities({ offersByCity, selectedCity }: CitiesProps): JSX.Element {
   const sort = sortCallbacks[sortItem] ?? defaultSort;
   // перед сортировкой копирую массив. В данном конкретном случае это нужно для отмены мемоизации при выборе сортировки
   const sortedOffers = offersByCity.slice().sort(sort);
-  // const sortedOffers = offersByCity.sort(sort);
+  // добавление мемоизации объекта решило проблему, описанную в комменте строки 47
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoSortedOffers = useMemo(() => sortedOffers, [sortItem, offersByCity]);
+
 
   // function handleCardHover(offerId: Offer['id'] | null) {
   //   setHoveredOfferId(offerId);
@@ -42,6 +45,7 @@ function Cities({ offersByCity, selectedCity }: CitiesProps): JSX.Element {
   //        sortedOffers при создании использует копию пропса (slice().sort(), следовательно при перерисовке это будет новый массив
   //        Новый массив передается пропсом offers={sortedOffers} в CardList --> перерисовка
   //         Убрать slice() мы не можем, иначе при смене значения сортировки нам нужна перерисовка CardList, но мемоизированный CardList не даст нам ее
+  //--> UPD! мемоизация массива sortedOffers решило описанную выше проблему
 
   const handleCardHover = useCallback(
     (offerId: Offer['id'] | null) => setHoveredOfferId(offerId)
@@ -57,7 +61,7 @@ function Cities({ offersByCity, selectedCity }: CitiesProps): JSX.Element {
           <div className="cities__places-list places__list tabs__content">
             <CardList
               elementType={'cities'}
-              offers={sortedOffers}
+              offers={memoSortedOffers}
               onCardHover={handleCardHover}
             />
           </div>
