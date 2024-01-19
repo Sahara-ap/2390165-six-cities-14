@@ -15,6 +15,8 @@ enum AppRoute {
   Favorite = '/favorites',
   Offer = '/offer/',
   NotFound = '/*',
+
+  Lose = '/lose',
 }
 
 enum AuthStatus {
