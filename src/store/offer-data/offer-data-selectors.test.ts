@@ -1,5 +1,5 @@
 import { describe } from 'vitest';
-import { getErrorStatus, getIsOffersLoading, getOffers, getSelectedOffer } from './offer-data-selectors';
+import { getErrorStatus, getIsOffersLoading, getOffers, getSelectedOffer, getSortedReviews } from './offer-data-selectors';
 import { LoadingDataStatus, NameSpace } from '../../const';
 import { makeFakeOffers, makeFakeSelectedOffer } from '../../utilities/mocks';
 
@@ -29,6 +29,12 @@ describe('OfferData selectors', () => {
     const {offers} = state[NameSpace.Data];
     const result = getOffers(state);
     expect(result).toEqual(offers);
+  });
+
+  it('should return sortedReviews from state', () => {
+    const {reviews} = state[NameSpace.Data];
+    const result = getSortedReviews(state);
+    expect(result).toEqual(reviews);
   });
 
   it('should return hasError from state', () => {
