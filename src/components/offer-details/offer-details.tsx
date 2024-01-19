@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import ReviewList from './review-ist/review-list';
 import ReviewForm from './review-form/review-form';
-import { postFavStatusAction } from '../../store/api-actions';
+import { postFavStatusAction } from '../../store/api-action/api-actions';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { AppRoute, AuthStatus } from '../../const';
 

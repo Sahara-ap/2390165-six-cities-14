@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { AppRoute, AuthStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { logoutAction } from '../../store/api-actions';
+import { logoutAction } from '../../store/api-action/api-actions';
 import { getAuthStatus, getUserData } from '../../store/users-process/user-process-selectors';
 import { getFavs } from '../../store/offer-data/offer-data-selectors';
 

@@ -1,5 +1,5 @@
 import { useAppDispatch } from '../../hooks';
-import { fetchOffersAction } from '../../store/api-actions';
+import { fetchOffersAction } from '../../store/api-action/api-actions';
 
 function Error(): JSX.Element {
   const dispatch = useAppDispatch();

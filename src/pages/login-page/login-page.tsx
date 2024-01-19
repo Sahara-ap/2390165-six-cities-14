@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { loginAction } from '../../store/api-actions';
+import { loginAction } from '../../store/api-action/api-actions';
 import { getAuthStatus } from '../../store/users-process/user-process-selectors';
 import { setCity } from '../../store/app-process/app-process-slice';
 

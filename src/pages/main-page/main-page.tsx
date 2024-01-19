@@ -8,7 +8,7 @@ import MainEmpty from '../../components/main-empty/main-empty';
 import { getIsOffersLoading, getOffers } from '../../store/offer-data/offer-data-selectors';
 import { getAuthStatus } from '../../store/users-process/user-process-selectors';
 import { getActiveCity } from '../../store/app-process/app-process-selectors';
-import { fetchOffersAction } from '../../store/api-actions';
+import { fetchOffersAction } from '../../store/api-action/api-actions';
 import { useEffect } from 'react';
 
 function MainPage(): JSX.Element {

@@ -1,9 +1,9 @@
 import { LoadingDataStatus } from '../../const';
 import { makeFakeOffers, makeFakeReviews } from '../../utilities/mocks';
-import { fetchOffersAction } from '../api-actions';
+import { fetchOffersAction } from '../api-action/api-actions';
 import { isReviewSending, offersData, setReviews } from './offer-data-slice';
 
-describe('offerData Slice', () => {
+describe('OfferData Slice', () => {
   const initialState = {
     offers: [],
     hasError: false,

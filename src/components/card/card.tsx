@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Offer } from '../../types/offer';
 import { AppRoute, AuthStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { postFavStatusAction } from '../../store/api-actions';
+import { postFavStatusAction } from '../../store/api-action/api-actions';
 import { getAuthStatus } from '../../store/users-process/user-process-selectors';
 import { memo } from 'react';
 import { getRatingValue } from '../../utilities/utilities';

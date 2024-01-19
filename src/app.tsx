@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from './hooks';
 import { getErrorStatus } from './store/offer-data/offer-data-selectors';
 import Error from './pages/error/error';
 import { useEffect } from 'react';
-import { checkAuthAction } from './store/api-actions';
+import { checkAuthAction } from './store/api-action/api-actions';
 import HistoryRouter from './components/history-route/history-route';
 import browserHistory from './browser-history';
 

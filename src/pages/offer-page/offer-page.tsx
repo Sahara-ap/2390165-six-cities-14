@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 
 
 import { PlaceHolder } from '../../components/placeholder/placeholder';
-import { fetchSelectedOfferDataAction } from '../../store/api-actions';
+import { fetchSelectedOfferDataAction } from '../../store/api-action/api-actions';
 import { getNearPlaces, getOfferDataStatusSending, getSelectedOffer } from '../../store/offer-data/offer-data-selectors';
 import { LoadingDataStatus } from '../../const';
 

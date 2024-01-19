@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { LoadingDataStatus, NameSpace } from '../../const';
-import { fetchFavoritesAction, fetchOffersAction, fetchSelectedOfferDataAction, postCommentAction, postFavStatusAction } from '../api-actions';
+import { fetchFavoritesAction, fetchOffersAction, fetchSelectedOfferDataAction, postCommentAction, postFavStatusAction } from '../api-action/api-actions';
 import { OffersData } from '../../types/sliceTypes';
 import ReviewType from '../../types/review';
 import { Offer } from '../../types/offer';

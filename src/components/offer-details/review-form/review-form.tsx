@@ -1,6 +1,6 @@
 import { FormEvent, ChangeEvent, Fragment, useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
-import { clearErrorAction, postCommentAction } from '../../../store/api-actions';
+import { clearErrorAction, postCommentAction } from '../../../store/api-action/api-actions';
 import { useParams } from 'react-router-dom';
 import { getReviewStatusSending } from '../../../store/offer-data/offer-data-selectors';
 import { LoadingDataStatus } from '../../../const';

@@ -1,17 +1,17 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
-import { APIRoute, AppRoute, TIMEOUT_SHOW_ERROR } from '../const';
-import { dropToken, saveToken } from '../services/apiService/token';
+import { APIRoute, AppRoute, TIMEOUT_SHOW_ERROR } from '../../const';
+import { dropToken, saveToken } from '../../services/apiService/token';
 
-import { AppDispatch, ThunkAPI } from '../types/state';
-import { AuthData } from '../types/auth-data';
-import { UserData } from '../types/user-data';
-import { Favorite, Offer, SelectedOffer } from '../types/offer';
-import ReviewType, { CommentSend } from '../types/review';
-import { setError } from './app-process/app-process-slice';
-import { addFavOffer, dropAllFavorites, dropFavOffer, updateNearPlaces, updateOffers } from './offer-data/offer-data-slice';
-import { redirectToRoute } from './actions/actions';
+import { AppDispatch, ThunkAPI } from '../../types/state';
+import { AuthData } from '../../types/auth-data';
+import { UserData } from '../../types/user-data';
+import { Favorite, Offer, SelectedOffer } from '../../types/offer';
+import ReviewType, { CommentSend } from '../../types/review';
+import { setError } from '../app-process/app-process-slice';
+import { addFavOffer, dropAllFavorites, dropFavOffer, updateNearPlaces, updateOffers } from '../offer-data/offer-data-slice';
+import { redirectToRoute } from '../actions/actions';
 
 
 const fetchOffersAction = createAsyncThunk<Offer[], undefined, {
