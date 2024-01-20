@@ -18,7 +18,7 @@ vi.mock('../../browser-history.ts', () => ({
 }));
 
 describe('Redirect middleware', () => {
-  let store: MockStore; //не импортируем стор, а имитируем с помощью пакета redux-mock-store
+  let store: MockStore; //не импортируем стор, а имитируем (мокаем) с помощью пакета redux-mock-store
 
   //cb будет запущен один раз в начале перед всеми тестами
   beforeAll(() => {
