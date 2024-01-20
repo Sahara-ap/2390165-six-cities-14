@@ -6,7 +6,10 @@ import { pickRandomElement } from './utilities';
 import { Offer, SelectedOffer } from '../types/offer';
 import Host from '../types/host';
 import ReviewType from '../types/review';
-
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
+import { createAPI } from '../services/apiService/api';
+import { State } from '../types/state';
 
 const makeFakeLocation = () => ({
   latitude: faker.number.float({ min: 0, max: 180, precision: 0.000001 }),
@@ -69,10 +72,14 @@ const makeFakeReviews = (): ReviewType[] => {
   return result;
 };
 
+export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
+const extractActionsTypes = (actions: Action<string>[]) => actions.map(({ type }) => type);
+
 export {
   makeFakeLocation,
   makeFakeHost,
   makeFakeOffers,
   makeFakeSelectedOffer,
   makeFakeReviews,
+  extractActionsTypes,
 };
