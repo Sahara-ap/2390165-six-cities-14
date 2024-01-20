@@ -13,9 +13,10 @@ import { Action } from 'redux';
 import axios from 'axios';
 
 import { createAPI } from '../../services/apiService/api';
-import { checkAuthAction } from './api-actions';
+import { checkAuthAction, fetchOffersAction } from './api-actions';
 import { APIRoute } from '../../const';
 import { State } from '../../types/state';
+import { makeFakeOffers } from '../../utilities/mocks';
 
 type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>
 const extractActionsTypes = (actions: Action<string>[]) => actions.map((action) => action.type);
@@ -74,4 +75,58 @@ describe('Async actions', () => {
         ]);
       });
   });
+  //негативный сценарий при котором проверяем авто экшены, если сервер ответил ошибкой 400
+  it('should dispatch "checkAuthAction.pending" and "checkAuthAction.rejected" when server response 400 with thunk "checkAuthAction',
+    async () => {
+      mockAxiosAdapter.onGet(APIRoute.Login).reply(400);
+      await store.dispatch(checkAuthAction());
+      const actions = extractActionsTypes(store.getActions());
+
+      console.log('Actions', store.getActions())
+      expect(actions).toEqual([
+        checkAuthAction.pending.type, // 'user/checkAuth/pending'
+        checkAuthAction.rejected.type // 'user/checkAuth/rejected'
+      ]);
+    });
+
+  // группа тестов для санок, где с сервера получаем данные и диспатчим их в стор
+  describe('fetchOffers', () => {
+    //Позитивный сценарий. Сервер ответил 200
+    //два в одном 1)тестим что автоматом дисатчнулись action.pending и action.fulfilled
+    //  2) данные которые вернул сервер соответствуют ожидаемым (моковым)
+    it('should dispatch "fetchOffersAction.pending", "fetchOffersAction.fulfilled", when server response 200',
+      async () => {
+        const mockOffers = makeFakeOffers();
+        mockAxiosAdapter.onGet(APIRoute.Offers).reply(200, mockOffers);
+
+        await store.dispatch(fetchOffersAction());
+        const emittedActions = store.getActions();
+        const extractedActionTypes = extractActionsTypes(emittedActions);
+        const fetchOffersActionFulfilled = emittedActions.at(1) as ReturnType<typeof fetchOffersAction.fulfilled>;
+
+
+        expect(extractedActionTypes).toEqual([
+          fetchOffersAction.pending.type,
+          'data/fetchOffers/fulfilled'
+        ]);
+        expect(fetchOffersActionFulfilled.payload).toEqual(mockOffers);
+      });
+  });
+
+  //Негативный сценарий. Сервер ответил 400
+  it('should dispatch "fetchOffersAction.pending", "fetchOffersAction.rejected", when server response 400',
+    async () => {
+      mockAxiosAdapter.onGet(APIRoute.Offers).reply(400, []);
+
+      await store.dispatch(fetchOffersAction());
+      const actions = extractActionsTypes(store.getActions());
+
+
+      expect(actions).toEqual([
+        fetchOffersAction.pending.type,
+        fetchOffersAction.rejected.type
+      ]);
+    });
+
+
 });
