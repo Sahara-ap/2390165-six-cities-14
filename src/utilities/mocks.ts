@@ -10,6 +10,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { createAPI } from '../services/apiService/api';
 import { State } from '../types/state';
+import { UserData } from '../types/user-data';
 
 const makeFakeLocation = () => ({
   latitude: faker.number.float({ min: 0, max: 180, precision: 0.000001 }),
@@ -22,6 +23,14 @@ const makeFakeHost = (): Host => ({
   name: faker.person.fullName(),
   isPro: true,
   avatarUrl: faker.internet.url(),
+});
+
+const makeFakeUserData = (): UserData => ({
+  name: faker.person.fullName(),
+  avatarUrl: faker.internet.url(),
+  isPro: true,
+  email: faker.internet.email(),
+  token: 'secret',
 });
 
 const makeFakeOffers = (): Offer[] => new Array(3).fill(null).map(() => ({
@@ -78,6 +87,7 @@ const extractActionsTypes = (actions: Action<string>[]) => actions.map(({ type }
 export {
   makeFakeLocation,
   makeFakeHost,
+  makeFakeUserData,
   makeFakeOffers,
   makeFakeSelectedOffer,
   makeFakeReviews,

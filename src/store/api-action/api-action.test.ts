@@ -8,15 +8,20 @@
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
-import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import axios from 'axios';
 
 import { createAPI } from '../../services/apiService/api';
-import { checkAuthAction, fetchOffersAction } from './api-actions';
+import { checkAuthAction, fetchFavoritesAction, fetchOffersAction, loginAction, logoutAction } from './api-actions';
 import { APIRoute } from '../../const';
 import { State } from '../../types/state';
-import { makeFakeOffers } from '../../utilities/mocks';
+import { makeFakeOffers, makeFakeUserData } from '../../utilities/mocks';
+import { redirectToRoute } from '../actions/actions';
+import { AuthData } from '../../types/auth-data';
+import { UserData } from '../../types/user-data';
+import { ThunkDispatch } from 'redux-thunk';
+import * as tokenStorage from '../../services/apiService/token';
+import { dropAllFavorites } from '../offer-data/offer-data-slice';
 
 type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>
 const extractActionsTypes = (actions: Action<string>[]) => actions.map((action) => action.type);
@@ -41,6 +46,7 @@ describe('Async actions', () => {
   let store: ReturnType<typeof mockStoreCreator>;
 
   // перед каждым тестом необходимо обнулять стор, чтобы тесты не падали
+  //  Если не пересоздавать в сторе сохранялась бы вся!! история actions --> тесты падали
   beforeEach(() => {
     store = mockStoreCreator({
       DATA: { offers: [] },
@@ -56,7 +62,11 @@ describe('Async actions', () => {
       async () => {
         //Донастроим адаптер, указав какие данные мы хотим получать
         //  onGet - ручка сервера; reply - ответ сервера. Превый аргумент-код, второй-данные, третий-заголовки
-        mockAxiosAdapter.onGet(APIRoute.Login).reply(200);
+        //  готовим обязательно фейковый ответ (мокаем ответ сервера), т.к. внутри санок есть блок if(data)
+        //    он не нужный и даже вредный, но для примера обработки хорошо. Если данные не положить в reply(200, data)
+        //    fetchFavoritesAction - не войдет в список в рамках теста, а нам надо сохранить историю действий внутри санок
+        const fakeResponseData: UserData = makeFakeUserData();
+        mockAxiosAdapter.onGet(APIRoute.Login).reply(200, fakeResponseData);
 
         await store.dispatch(checkAuthAction());
 
@@ -71,6 +81,7 @@ describe('Async actions', () => {
 
         expect(actionTypes).toEqual([
           checkAuthAction.pending.type,
+          fetchFavoritesAction.pending.type,
           checkAuthAction.fulfilled.type,
         ]);
       });
@@ -82,7 +93,6 @@ describe('Async actions', () => {
       await store.dispatch(checkAuthAction());
       const actions = extractActionsTypes(store.getActions());
 
-      console.log('Actions', store.getActions())
       expect(actions).toEqual([
         checkAuthAction.pending.type, // 'user/checkAuth/pending'
         checkAuthAction.rejected.type // 'user/checkAuth/rejected'
@@ -128,5 +138,74 @@ describe('Async actions', () => {
       ]);
     });
 
+  //Группа тестов для проверки loginACtion
+  //  1)есть зависимость от LocalStorage 2)есть redirect 3)есть данные для post + есть token в ответе от сервера
+  describe('loginAction', () => {
+    it('should dispatch "loginAction.pending", fetchOffersAction.pending, fetchFavoritesAction.pending, "redirectToRoute", "loginAction.fulfilled" when server response 200',
+      async () => {
+        const fakeAuthData: AuthData = { email: 'test@test.com', password: 'qwe123' };
+        const fakeServerReply = { token: 'secret' }; //часть данных которые пришлет сервер
+        mockAxiosAdapter.onPost(APIRoute.Login).reply(200, fakeServerReply);
+
+        await store.dispatch(loginAction(fakeAuthData));
+        const actions = extractActionsTypes(store.getActions());
+
+        expect(actions).toEqual([
+          loginAction.pending.type,
+          fetchOffersAction.pending.type,
+          fetchFavoritesAction.pending.type,
+          redirectToRoute.type,
+          loginAction.fulfilled.type,
+        ]);
+      });
+
+    it('should call "saveToken" once with the recieved token',
+      async () => {
+        const fakeAuthData: AuthData = { email: 'test@test.com', password: 'qwe123' };
+        const fakeServerReply = { token: 'secret' };
+        mockAxiosAdapter.onPost(APIRoute.Login).reply(200, fakeServerReply);
+
+        //мокаем функцию saveToken с помощью инструментов vitest
+        // spyOn() наблюдает за методом объекта и следит что она была вызвана
+        // mockSaveToken будет вызываться в тесте вместо оригинала и собирать мету о вызове. она даст нам мета-инфу: была ли вызвана настоящая Фхб сколько раз, с какими аргументами и прочее.
+        //  теперь всю мету-инфу можно получить в методах assertoionLib expect
+        //1арг - объект, 2арг его метод. Поэтому мы так хитро импортировали tokenStorage
+        const mockSaveToken = vi.spyOn(tokenStorage, 'saveToken');
+
+        await store.dispatch(loginAction(fakeAuthData));
+
+        //тестим, что mockSaveToken() вызван один раз:
+        expect(mockSaveToken).toBeCalledTimes(1);
+        //тестим что mockSaveToken(token) был вызван с токеном от сервера
+        expect(mockSaveToken).toBeCalledWith(fakeServerReply.token);
+      });
+  });
+
+  describe('logoutAction', () => {
+    it('should dispatch "logoutAction.pending", fetchOffersAction.pending, dropAllFavorites, "logoutAction.fulfilled" when server response 204',
+      async () => {
+        mockAxiosAdapter.onDelete(APIRoute.Logout).reply(204);
+
+        await store.dispatch(logoutAction());
+        const actions = extractActionsTypes(store.getActions());
+
+        expect(actions).toEqual([
+          logoutAction.pending.type,
+          fetchOffersAction.pending.type,
+          dropAllFavorites.type,
+          logoutAction.fulfilled.type,
+        ]);
+      });
+
+    it('should call "dropToken" once with "logoutAction"',
+      async () => {
+        mockAxiosAdapter.onDelete(APIRoute.Logout).reply(204);
+        const mockSaveToken = vi.spyOn(tokenStorage, 'dropToken');
+
+        await store.dispatch(logoutAction());
+
+        expect(mockSaveToken).toBeCalledTimes(1);
+      });
+  });
 
 });
