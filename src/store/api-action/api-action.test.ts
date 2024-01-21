@@ -10,7 +10,6 @@ import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import axios, { InternalAxiosRequestConfig } from 'axios';
 
 import { createAPI } from '../../services/apiService/api';
 import * as tokenStorage from '../../services/apiService/token';
@@ -31,30 +30,15 @@ describe('Async actions', () => {
   //  позволяет подменить настоящие запросы к серверу
   const api = createAPI(); //создан экземпляр axios
   //UPD! vitest видит внутри интерсептора функцию processErrorHandle, где реализован диспатч экшенов в стор и
-  //выдает ошибку на тест. Либо комментить processErrorHandle, либо использовать toast, либо создавать здесь свой axios.create()
+  //выдает ошибку на тест. Решение: либо комментить processErrorHandle, либо использовать toast, либо создавать здесь свой axios.create()
+  //UPD2 вместо processErrorHandle в response-interceptor затащил react-toastify
 
-  // const api = axios.create({
-  //   baseURL: 'https://14.design.pages.academy/six-cities',
-  //   timeout: 5000,
 
-  // });
-  // api.interceptors.request.use(
-  //   (config: InternalAxiosRequestConfig) => {
-  //     const token = tokenStorage.getToken();
-
-  //     if (token && config.headers) {
-  //       config.headers['x-token'] = token;
-  //     }
-
-  //     return config;
-  //   });
   const mockAxiosAdapter = new MockAdapter(api); //скормили экземпляр в адаптер, пропатчив его таким образом
 
   //Шаг2. мокаем стор
-  //соберем все middleware в кучу:
-  const middleware = [thunk.withExtraArgument(api)];
-  //конфигурируем сам стор при помощи известного нам redux-mock-store от @jedmao
-  const mockStoreCreator = configureMockStore<State, Action<string>, AppThunkDispatch>(middleware);
+  const middleware = [thunk.withExtraArgument(api)]; //соберем все middleware в кучу:
+  const mockStoreCreator = configureMockStore<State, Action<string>, AppThunkDispatch>(middleware); //конфигурируем сам стор при помощи известного нам redux-mock-store от @jedmao
   let store: ReturnType<typeof mockStoreCreator>;
 
   // перед каждым тестом необходимо обнулять стор, чтобы тесты не падали
