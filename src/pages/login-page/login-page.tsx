@@ -70,6 +70,7 @@ function LoginPage() {
                   name="email"
                   placeholder="Email"
                   required
+                  data-testid="loginElement"
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -82,6 +83,7 @@ function LoginPage() {
                   placeholder="Password"
                   pattern="([a-zA-Z]+[0-9]+)|([0-9]+[a-zA-Z]+)"
                   required
+                  data-testid="passwordElement"
                 />
               </div>
               <button

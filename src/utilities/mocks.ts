@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { CITY_NAMES } from '../const';
+import { AuthStatus, CITY_NAMES, LoadingDataStatus } from '../const';
 import { pickRandomElement } from './utilities';
 
 import { Offer, SelectedOffer } from '../types/offer';
@@ -84,6 +84,36 @@ const makeFakeReviews = (): ReviewType[] => {
 export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
 const extractActionsTypes = (actions: Action<string>[]) => actions.map(({ type }) => type);
 
+const makeFakeStore = (initialState?: Partial<State>) => ({
+  DATA: {
+    offers: makeFakeOffers(),
+    hasError: false,
+    isOffersLoading: false,
+
+    selectedOffer: makeFakeSelectedOffer(),
+    nearPlaces: [],
+    reviews: [],
+    offerDataStatusSending: LoadingDataStatus.Unsent,
+
+
+    reviewStatusSending: LoadingDataStatus.Unsent,
+
+    favs: [],
+    favsLoadingStatus: LoadingDataStatus.Unsent
+  },
+
+  USER: {
+    authStatus: AuthStatus.Unknown,
+    userData: null,
+  },
+  APP: {
+    activeCity: CITY_NAMES[0],
+    error: null,
+  },
+  ...initialState ?? {}
+
+});
+
 export {
   makeFakeLocation,
   makeFakeHost,
@@ -92,4 +122,5 @@ export {
   makeFakeSelectedOffer,
   makeFakeReviews,
   extractActionsTypes,
+  makeFakeStore,
 };
