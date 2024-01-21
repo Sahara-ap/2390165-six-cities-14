@@ -9,19 +9,19 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import { Action } from 'redux';
-import axios from 'axios';
+import { ThunkDispatch } from 'redux-thunk';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 
 import { createAPI } from '../../services/apiService/api';
+import * as tokenStorage from '../../services/apiService/token';
 import { checkAuthAction, fetchFavoritesAction, fetchOffersAction, loginAction, logoutAction } from './api-actions';
-import { APIRoute } from '../../const';
-import { State } from '../../types/state';
-import { makeFakeOffers, makeFakeUserData } from '../../utilities/mocks';
 import { redirectToRoute } from '../actions/actions';
+import { makeFakeOffers, makeFakeUserData } from '../../utilities/mocks';
+import { APIRoute } from '../../const';
+import { dropAllFavorites } from '../offer-data/offer-data-slice';
 import { AuthData } from '../../types/auth-data';
 import { UserData } from '../../types/user-data';
-import { ThunkDispatch } from 'redux-thunk';
-import * as tokenStorage from '../../services/apiService/token';
-import { dropAllFavorites } from '../offer-data/offer-data-slice';
+import { State } from '../../types/state';
 
 type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>
 const extractActionsTypes = (actions: Action<string>[]) => actions.map((action) => action.type);
@@ -29,13 +29,25 @@ const extractActionsTypes = (actions: Action<string>[]) => actions.map((action) 
 describe('Async actions', () => {
   // Шаг1. мокаем axios с использованием библиотеки axios-mock-adapter
   //  позволяет подменить настоящие запросы к серверу
-  // const axios = createAPI(); //создан экземпляр axios UPD! vitest в упор не хочет воспринимать функцию createAPI() и выдает ошибку на тест
+  const api = createAPI(); //создан экземпляр axios
+  //UPD! vitest видит внутри интерсептора функцию processErrorHandle, где реализован диспатч экшенов в стор и
+  //выдает ошибку на тест. Либо комментить processErrorHandle, либо использовать toast, либо создавать здесь свой axios.create()
 
-  const api = axios.create({
-    baseURL: 'https://14.design.pages.academy/six-cities',
-    timeout: 5000,
+  // const api = axios.create({
+  //   baseURL: 'https://14.design.pages.academy/six-cities',
+  //   timeout: 5000,
 
-  });
+  // });
+  // api.interceptors.request.use(
+  //   (config: InternalAxiosRequestConfig) => {
+  //     const token = tokenStorage.getToken();
+
+  //     if (token && config.headers) {
+  //       config.headers['x-token'] = token;
+  //     }
+
+  //     return config;
+  //   });
   const mockAxiosAdapter = new MockAdapter(api); //скормили экземпляр в адаптер, пропатчив его таким образом
 
   //Шаг2. мокаем стор
