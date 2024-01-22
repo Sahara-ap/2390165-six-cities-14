@@ -2,14 +2,14 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { withHistory, withStore } from '../../utilities/mock-component';
 import LoginPage from './login-page';
-import { makeFakeStore } from '../../utilities/mocks';
+import { makeFakeState } from '../../utilities/mocks';
 
 describe('Component: LoginPage', () => {
   it('should render correctly', () => {
     const loginText = 'E-mail';
     const passwordText = 'Password';
 
-    const mockStore = makeFakeStore();
+    const mockStore = makeFakeState();
     const { withStoreComponent } = withStore(<LoginPage />, mockStore); //получили обертку компонента в ReduxProvider
     const preparedComponent = withHistory(withStoreComponent); //порядок строк 11 и 12 неважен
 
@@ -27,7 +27,7 @@ describe('Component: LoginPage', () => {
       const expectedLoginValue = 's@gmail.com';
       const expectedPasswordValue = 'qwer123';
 
-      const mockStore = makeFakeStore();
+      const mockStore = makeFakeState();
       const { withStoreComponent } = withStore(<LoginPage />, mockStore);
       const preparedComponent = withHistory(withStoreComponent);
 

@@ -12,11 +12,12 @@ type PrivateRouteProps = {
 function PrivateRoute({ children, redirectTo }: PrivateRouteProps): JSX.Element {
   const authStatus = useAppSelector(getAuthStatus);
 
-  if (authStatus === AuthStatus.NoAuth) {
-    return <Navigate to={redirectTo} />;
-  }
-  return children;
+  return (
+    authStatus === AuthStatus.Auth
+      ? children
+      : <Navigate to={redirectTo} />
 
+  );
 }
 
 export default PrivateRoute;

@@ -84,7 +84,7 @@ const makeFakeReviews = (): ReviewType[] => {
 export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
 const extractActionsTypes = (actions: Action<string>[]) => actions.map(({ type }) => type);
 
-const makeFakeStore = (initialState?: Partial<State>) => ({
+const makeFakeState = (initialState?: Partial<State>) => ({
   DATA: {
     offers: makeFakeOffers(),
     hasError: false,
@@ -122,5 +122,5 @@ export {
   makeFakeSelectedOffer,
   makeFakeReviews,
   extractActionsTypes,
-  makeFakeStore,
+  makeFakeState,
 };
